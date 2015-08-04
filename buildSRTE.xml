@@ -9,6 +9,7 @@
         <mkdir dir="${tomcatDir}/WEB-INF/classes/org/adl/samplerte/server" />
         <mkdir dir="${tomcatDir}/CourseImports" />
         <mkdir dir="${tomcatDir}/xml" />
+        <mkdir dir="${ccHome}/source/databases" />
         <echo message="deleting existing jar files" />
         <delete >
             <fileset dir="${buildDir}" >
@@ -43,8 +44,14 @@
     <target name="buildLMSClient" depends="buildCmiDataModel">
         <ant antfile="buildLMSClient.xml" />
     </target>
+	
+	<!-- This will build the necessary dbs and tables in SQLite (only creates the dbs if don't exist in databases/-->
+    <target name="buildSQLite" depends="buildLMSClient" >
+        <echo message="Setting up the databases"/>
+        <ant antfile="buildSQLite.xml" target="run" />
+    </target>
 
-    <target name="createPrintableReadme" depends="buildLMSClient">
+    <target name="createPrintableReadme" depends="buildSQLite">
         <echo message="Creating RTE Printable Readme" />
 		<java classname="org.adl.util.createPrintableReadmeRTE" fork="true" failonerror="true">
 			<classpath>
@@ -64,9 +71,13 @@
             <fileset dir="${buildDir}/org/adl/samplerte/server/" />
         </copy>
 
+        <copy todir="${tomcatDir}/META-INF/">
+            <fileset dir="${ccHome}/source/SampleRTE/Tomcat_Modifications/META-INF">
+            </fileset>
+        </copy>
+
         <!-- Tomcat Modifications -->
         <copy todir="${tomcatDir}/WEB-INF" file="${ccHome}/source/SampleRTE/Tomcat_Modifications/WEB-INF/web.xml" />
-
         <copy todir="${tomcatDir}/server/lib" file="${ccHome}/source/SampleRTE/Tomcat_Modifications/server/lib/catalina.jar" />
         <copy todir="${tomcatDir}/conf" file="${ccHome}/source/SampleRTE/Tomcat_Modifications/conf/web.xml" />
         <copy todir="${tomcatDir}/conf" file="${ccHome}/source/SampleRTE/Tomcat_Modifications/conf/server.xml" />
@@ -75,9 +86,11 @@
         <copy todir="${tomcatDir}/bin" file="${ccHome}/source/SampleRTE/Tomcat_Modifications/bin/newstartup.bat" />
         <copy todir="${tomcatDir}/bin" file="${ccHome}/source/SampleRTE/Tomcat_Modifications/bin/newshutdown.bat" />
 
+
         <copy todir="${tomcatDir}" >
-        <fileset dir="${ccHome}/source/SampleRTE/LMSClient/" />
+            <fileset dir="${ccHome}/source/SampleRTE/LMSClient/" />
         </copy>
+
 
 	  <copy todir="${tomcatDir}/css/" >
         <fileset dir="${ccHome}/css/" />
@@ -98,6 +111,8 @@
                 <include name="xmlParserAPIs.jar" />
                 <include name="joda-time-1.1.jar" />
                 <include name="xalan.jar" />
+		<include name="gson-2.3.1.jar" />
+		<include name="xapi-0.1.3.jar" />
             </fileset>
         </copy>
          <!--start add for java file upload -->
@@ -108,8 +123,11 @@
                 <include name="jaxen-1.1.1.jar" />
                 <include name="commons-fileupload-1.1.jar" />
                 <include name="commons-io-1.2.jar" />
-		        <include name="ant.jar" />
-		        <include name="xalan.jar" />
+		<include name="ant.jar" />
+		<include name="xalan.jar" />
+                <include name="sqlite-jdbc-3.7.2.jar" />
+		<include name="gson-2.3.1.jar" />
+		<include name="xapi-0.1.3.jar" />
             </fileset>
         </copy>
         <!--end add for java file upload -->
@@ -124,6 +142,12 @@
             <fileset dir="${buildDir}" >
                 <include name="*.jar" />
             </fileset>
+            <fileset dir="${ccHome}/source/lib" >
+                <include name="sqlite-jdbc-3.7.2.jar" />
+                <include name="commons-fileupload-1.1.jar" />
+                <include name="commons-io-1.2.jar" />
+                <include name="jdom.jar" />
+            </fileset>
         </copy>
 
         <copy todir="${tomcatDir}/" >
@@ -131,6 +155,13 @@
                <include name="*.jar" />
            </fileset>
        </copy>
+
+        <!-- Copy databases to catalina home if they don't exist -->
+        <copy todir="${CATALINA_HOME}/databases" >
+            <fileset dir="${ccHome}/source/databases" >
+                <include name="*.db" />
+            </fileset>
+        </copy>
 
         <!--Copy adllog.properties-->
        <copy todir="${tomcatDir}/config/" >
@@ -140,7 +171,32 @@
 
     </target>
 
-    <target name="buildSampleRTE" depends="moveFiles" /> 
+    <condition property="isUnix">
+        <os family="unix" />
+    </condition>
+    <target name="unixOnlyMove" depends="moveFiles" if="isUnix">
+        <copy todir="${CATALINA_HOME}/lib/">
+            <fileset dir="${ccHome}/source/lib" >
+                <include name="saxon8.jar" />
+                <include name="jdom.jar" />
+                <include name="jaxen-1.1.1.jar" />
+                <include name="commons-fileupload-1.1.jar" />
+                <include name="commons-io-1.2.jar" />
+                <include name="ant.jar" />
+                <include name="xalan.jar" />
+                <include name="sqlite-jdbc-3.7.2.jar" />
+                <include name="gson-2.3.1.jar" />
+                <include name="xercesImpl.jar" />
+                <include name="xml-apis.jar" />
+                <include name="xmlParserAPIs.jar" />
+                <include name="joda-time-1.1.jar" />
+                <include name="gson-2.3.1.jar" />
+		<include name="xapi-0.1.3.jar" />
+            </fileset>
+        </copy>
+        <copy todir="${CATALINA_HOME}/bin" file="${srcOrgAdl}/validator/packagechecker/parsers/xsd/iso_schematron_skeleton.xsl" />
+    </target>
+    <target name="buildSampleRTE" depends="unixOnlyMove" />
 
 </project>
 

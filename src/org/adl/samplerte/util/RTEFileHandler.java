@@ -82,7 +82,7 @@ public class RTEFileHandler
     */
    public RTEFileHandler()
    {
-      mSampleRTERoot = File.separator + "SCORM4EDSampleRTE111Files";
+      mSampleRTERoot = System.getProperty("user.home") + File.separator + "SCORM4EDSampleRTE111Files";
    }
 
    /**
@@ -108,7 +108,7 @@ public class RTEFileHandler
             System.out.println("**** IN INITIALIZESTATEFILE****");
          }
          
-         String userDir = mSampleRTERoot + File.separator + iUserID + 
+         String userDir = mSampleRTERoot + File.separator + iUserID +
                            File.separator + iCourseID;
 
          File scoDataDir = new File( userDir );
@@ -192,7 +192,7 @@ public class RTEFileHandler
    {
       try
       {
-         String userDir = mSampleRTERoot + File.separator + iUserID + 
+         String userDir = mSampleRTERoot + File.separator + iUserID +
                           File.separator + iDeleteCourseID;
 
          if ( _Debug )
@@ -213,8 +213,7 @@ public class RTEFileHandler
       }
       catch(Exception e)
       {            
-         System.out.println("Error deleting files during un-registration");
-         e.printStackTrace();
+         // files missing or none to begin with.. do nothing
       }
    }
 
@@ -228,7 +227,6 @@ public class RTEFileHandler
       try
       {
          String tempDir = mSampleRTERoot + File.separator + "tempUploads";
-
          File tempUploadDir = new File(tempDir);
 
          File tempDirs[] = tempUploadDir.listFiles();

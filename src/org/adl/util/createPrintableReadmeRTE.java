@@ -45,8 +45,8 @@ public class createPrintableReadmeRTE
       String RTEReadmeLocation = EnvironmentVariable.getValue("SCORM4ED_SRTE111_HOME")
       + File.separatorChar + "Sample_RTE"
       + File.separatorChar + "source"
-      + File.separatorChar + "SampleRTE"
-      + File.separatorChar + "LMSClient" 
+	  + File.separatorChar + "SampleRTE"
+	  + File.separatorChar + "LMSClient" 
       + File.separatorChar + "RTE_Readme" + File.separatorChar ;
       
       // RTE files

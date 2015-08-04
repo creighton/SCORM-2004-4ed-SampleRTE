@@ -6,11 +6,10 @@
     String userid = (String)session.getAttribute( "USERID" );
 %>
 
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!doctype html>
   
- <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <html lang="en">
 <!--
 /*******************************************************************************
 **
@@ -64,21 +63,18 @@ Nothing in this license impairs or restricts the author's moral rights.
 <head>
 <meta http-equiv="expires" content="Tue, 20 Aug 1999 01:00:00 GMT" />
 <meta http-equiv="Pragma" content="no-cache" />
-<title>SCORM 2004 4th Edition Sample Run-Time Environment Version 1.1.1 -  
-    Special State End Session Event</title>
+<title>Special State End Session Event</title>
    
    <link href="../includes/sampleRTE_style.css" rel="stylesheet" type="text/css" />
    
 </head>
 <body>
-<script type="text/javascript" src="../runtime/BrowserDetect.js"></script>
 <!--<script type="text/javascript" src="../runtime/codebase.js"></script>-->
  <script type="text/javascript">
  //<!-- [CDATA[
  	var _Debug = false;
 	var scoWinType = typeof(window.opener)
 	var codeLoc = 'http://'+ window.document.location.host + '/adl/runtime/' + 'code.jsp';
-	DetectBrowser();
    
 	window.top.frames['LMSFrame'].document.forms['buttonform'].next.style.visibility = "hidden";
 	window.top.frames['LMSFrame'].document.forms['buttonform'].previous.style.visibility = "hidden";
@@ -93,29 +89,19 @@ Nothing in this license impairs or restricts the author's moral rights.
 //]]-->
 </script>
 
-
-
-<p>
-<br />
-    <a href="/adl/LMSCourseAdmin?type=<%= ServletRequestTypes.GO_HOME %>&userID=<%= userid %>">Go Back To RTE Home</a>
-<br /><br /><br /><br /><br />
-</p>           
-
-<p class="font_header">
-   <b>The current course session has ended.</b>
-<br />
-<br />
-<br />
-<br />
-</p>
-
-<table width="400" border="1" cellpadding="25">
-<tr>
-<td>
-  Click the link above to return to the main menu.
-  
-</td>
-</tr>
-</table>
+<jsp:include page="../runtime/LMSNavigation.jsp" flush="true">
+    <jsp:param value="" name="helpURL"/>
+</jsp:include>
+<div class="container" style="margin-top:4.5em;">
+   <div class="row">
+		<div class="col-md-12">
+		   <h2>The content has ended</h2>
+		   <p>
+		       The content has ended. You may go back to the course list using the 
+		       navigation at the top of the page. 
+		   </p>
+		</div>           
+	</div>
+</div>
 </body>
 </html> 

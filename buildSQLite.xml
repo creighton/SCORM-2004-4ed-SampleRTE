@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<project name="ADL" default="run" >
+    <description>Executes java file that makes sure the correct dbs/tables are created</description>
+
+    <target name="compile">
+        <mkdir dir="${buildDir}/org/adl/databases" />
+        <javac destdir="${buildDir}" srcdir="${src}/org/adl/databases">
+			<classpath>
+				<pathelement path="${buildDir}/" />
+			</classpath>
+		</javac>
+    </target>
+
+    <target name="run" depends="compile">
+		<java classname="org.adl.databases.SQLiteJDBC" fork="true" failonerror="true">
+			<classpath>
+				<pathelement location="${buildDir}/" />
+				<pathelement location="${lib}/sqlite-jdbc-3.7.2.jar" />
+			</classpath>
+		</java>
+
+    </target>
+</project>
